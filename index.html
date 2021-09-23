@@ -2,11 +2,47 @@
 <html>
     <head>
         <meta charset="UTF-8">
+        <script src="./lib/jquery-1.11.1.min.js"></script>
+        <style>
+            .btn{
+                background-color: #d4714f;
+                width: 200px;
+                height: 50px;
+                text-align: center;
+                line-height: 50px;
+                top: 604px;
+                font-size: 22px;
+            }
+            .tit{
+                text-align: center;
+                width: 500px;
+                height: 150px;
+                text-align: center;
+                line-height: 150px;
+                position: fixed;
+                top: 200px;
+                left: 400px;
+                font-size: 100px;
+            }
+            .unOpen{
+                background-color: #868686;
+            }
+        </style>
         <title>Dino</title>
     </head>    
     <body>
-        <canvas id="canvas"></canvas>
-        <script src="main.js"></script>
+
+        <div style="width: 1280px;height: 720px; background-image: url(./img/mainBackground.png)">
+
+            <div class="btnArea">
+                <div id="btn1" class="btn" style="position: fixed; left: 180px;" data-stage='1'>초급</div>
+                <div id="btn2" class="btn unOpen" style="position: fixed; left: 415px;" data-stage='2'>중급</div>
+                <div id="btn3" class="btn unOpen" style="position: fixed; left: 646px;" data-stage='3'>고급</div>
+                <div id="btn4" class="btn unOpen" style="position: fixed; left: 880px;" data-stage='4'>최고급</div>
+            </div>
+        </div>
+
+        <script src="cmmfunc.js"></script>
+        <script src="indexScreen.js"></script>
     </body>
 </html>
-
