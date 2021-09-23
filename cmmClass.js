@@ -1,3 +1,13 @@
+
+var collImg_1 = './img/milk_1.png';
+var collImg_2 = './img/bird.png';
+
+var cactus1 = new Image();
+cactus1.src = collImg_1;
+
+var cactus2 = new Image();
+cactus2.src = collImg_2;
+
 //장애물
 class Cactus{
     constructor(){

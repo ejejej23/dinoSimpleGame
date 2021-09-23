@@ -1,7 +1,6 @@
 var canvas = document.getElementById('canvas');
 var ctx = canvas.getContext('2d');
 
-
 canvas.width = 1280;
 canvas.height = 720;
 
@@ -9,17 +8,8 @@ var ballImg_norm = './img/ball_norm.png';
 var ballImg_coll = './img/ball_coll.png';
 var ballImg_jump = './img/ball_jump.png';
 
-var collImg_1 = './img/milk_1.png';
-var collImg_2 = './img/bird.png';
-
 var dinoImg = new Image();
 dinoImg.src = ballImg_norm;
-
-var cactus1 = new Image();
-cactus1.src = collImg_1;
-
-var cactus2 = new Image();
-cactus2.src = collImg_2;
 
 var levelParm = parseInt(getParam('level'));
 var level = (levelParm && levelParm !='') ? levelParm : 1;
@@ -50,16 +40,9 @@ switch(stage){
 var playSetting ={
     level : level,
     stage : stage,
-    speed : speed
+    speed : speed,
+    state : 'ING'
 }
-
-$('#btnArea')
-.on('click','.reStartBtn',function(){
-    window.location.href = './playScreen1.html?level='+playSetting.level+'&stage='+playSetting.stage;
-})
-.on('click','.goHomeBtn',function(){
-    window.location.href = './index.html?level='+playSetting.level;
-});
 
 //주인공
 var dino = {
@@ -87,6 +70,15 @@ var rndm = Math.floor(Math.random()*11)+3;
 var rndm2 = Math.floor(Math.random()*11)+5;
 
 
+$('#btnArea')
+.on('click','.reStartBtn',function(){
+    window.location.href = './playScreen.html?level='+playSetting.level+'&stage='+playSetting.stage;
+})
+.on('click','.goHomeBtn',function(){
+    window.location.href = './index.html?level='+playSetting.level;
+});
+
+
 //프레임마다 실행할 함수
 function frameFunc(){
     //requestAnimationFrame : 기본제공함수
@@ -94,7 +86,7 @@ function frameFunc(){
     timer++;
     myScore++;
 
-    if(myScore > 1000) endGame();
+    if(myScore > 1000 && playSetting.stage != 4) gameEnd();
 
     ctx.clearRect(0,0, canvas.width, canvas.height);//기존항목 지우기
 
@@ -133,8 +125,14 @@ function frameFunc(){
     }
 
 
-    dino.draw();
-    score.draw(myScore);
+    if(playSetting.state != 'OVER'){
+        dino.draw();
+        score.draw(myScore);
+    }else{
+        setTimeout(() => {
+            dino.draw();
+        }, 10);
+    }
 }
 
 
@@ -151,31 +149,32 @@ document.addEventListener('keydown', function(e){
 
 //충돌확인
 function collChk(dino, cactus){    
-    var colStdr = cactus.type ==1? 10:20;
+    var colStdr = cactus.type ==1? 15:20;
 
     if(cactus.x < (dino.x+dino.width-colStdr) 
         && (cactus.x +cactus.width-colStdr) > dino.x
         && cactus.y < (dino.y + dino.height-colStdr)
         && (cactus.height + cactus.y-colStdr) > dino.y){//충돌조건
-
         dinoImg.src = ballImg_coll;
-        //dino.draw();
-        cancelAnimationFrame(framAnimation);
-
-        $('#lose').show();
-        $('#finScoreDiv').text($('#topScoreDiv').text()).show();
-        $('#btnArea').show();
-        dino.draw();
+        setEndScreen(false);
     }
 }
 
 
-function endGame(){
+function gameEnd(){
     playSetting.level++;
+    setEndScreen(true);
+}
 
+function setEndScreen(flag){
     ctx.clearRect(0,0,canvas.width,canvas.height);
+
+    if(flag) $('#win').show();
+    else $('#lose').show();
+
     cancelAnimationFrame(framAnimation);
-    $('#win').show();
+    
     $('#finScoreDiv').text($('#topScoreDiv').text()).show();
-    $('#btnArea, #btnArea div').show();
+    $('#btnArea').show();
+    playSetting.state = 'OVER';
 }
